@@ -1,5 +1,12 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '/js/config.js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_CONFIGURED } from '/js/config.js';
+if (!SUPABASE_CONFIGURED) {
+ const box=document.getElementById('message');
+ box.textContent='Falta configurar Supabase. Edita /js/config.js con la Project URL y la clave pública (anon/publishable) de tu proyecto y vuelve a desplegar. Después ejecuta supabase/schema.sql en SQL Editor.';
+ box.className='message show error';
+ document.querySelectorAll('input,button').forEach(el=>el.disabled=true);
+ throw new Error('Supabase not configured');
+}
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
 const form=$('authForm'), loginTab=$('loginTab'), signupTab=$('signupTab');
